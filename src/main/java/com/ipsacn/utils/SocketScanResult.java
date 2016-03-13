@@ -1,7 +1,5 @@
 package com.ipsacn.utils;
 
-import com.springdy.utils.IPv4;
-
 /**
  * Created by springdy on 2015/11/9.
  */

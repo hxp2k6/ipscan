@@ -1,7 +1,7 @@
-package com.ipsacn.service;
 
 import akka.actor.*;
 import akka.japi.Creator;
+import com.ipsacn.service.MasterActor;
 import com.ipsacn.utils.IPRegion;
 import com.ipsacn.utils.ScanRegion;
 
@@ -25,20 +25,20 @@ public class Test {
         ports.add(9999);
         ports.add(6666);
         List<IPRegion> regions = new ArrayList<IPRegion>();
-        regions.add(new IPRegion("14.20.0.0","14.20.255.255"));
-        regions.add(new IPRegion("14.120.0.0","14.120.255.255"));
-        regions.add(new IPRegion("14.122.0.0","14.122.255.255"));
-        regions.add(new IPRegion("14.124.0.0","14.124.255.255"));
-        regions.add(new IPRegion("14.153.0.0","14.153.116.255"));
-        regions.add(new IPRegion("14.153.118.0","14.155.255.255"));
-        ScanRegion region = new ScanRegion(regions,ports);
+        regions.add(new IPRegion("14.20.0.0", "14.20.255.255"));
+        regions.add(new IPRegion("14.120.0.0", "14.120.255.255"));
+        regions.add(new IPRegion("14.122.0.0", "14.122.255.255"));
+        regions.add(new IPRegion("14.124.0.0", "14.124.255.255"));
+        regions.add(new IPRegion("14.153.0.0", "14.153.116.255"));
+        regions.add(new IPRegion("14.153.118.0", "14.155.255.255"));
+        ScanRegion region = new ScanRegion(regions, ports);
 //        ScanRegion region = new ScanRegion("192.168.6.1","192.168.7.1",ports);
         ActorSystem system = ActorSystem.create("PiSystem");
         ActorRef master = system.actorOf(Props.create(new Creator<Actor>() {
             public UntypedActor create() {
-                return  new MasterActor(1000,1000);
+                return new MasterActor(1000, 1000);
             }
         }), "master");
-        master.tell(region,null);
+        master.tell(region, null);
     }
 }

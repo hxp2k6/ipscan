@@ -7,6 +7,7 @@ import java.util.Calendar;
 /**
  * Created by springdy on 2015/11/6.
  */
+@Deprecated
 class HttpProxyScanRunnable implements Runnable {
     private final static String murl = "http://home.baidu.com/resource/r/home/menu.js";
     private String ip;
@@ -20,10 +21,10 @@ class HttpProxyScanRunnable implements Runnable {
     public void run() {
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
         long start = Calendar.getInstance().getTimeInMillis();
-        boolean b = Scan.verifyHttp(ip,port);
-        if(b) {
-            long end = Calendar.getInstance().getTimeInMillis();
-            System.out.println("ip:" + ip + ",port:" + port + " is proxy open" + " connect time:" + (end - start));
-        }
+//        boolean b = ScanURL.verifyHttp(ip, port);
+//        if(b) {
+//            long end = Calendar.getInstance().getTimeInMillis();
+//            System.out.println("ip:" + ip + ",port:" + port + " is proxy open" + " connect time:" + (end - start));
+//        }
     }
 }

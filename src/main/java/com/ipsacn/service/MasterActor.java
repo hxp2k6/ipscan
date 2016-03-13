@@ -3,6 +3,8 @@ package com.ipsacn.service;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import akka.routing.RoundRobinPool;
 import com.ipsacn.utils.*;
 
@@ -17,6 +19,7 @@ public class MasterActor extends UntypedActor {
     private int socketReceiveNums = 0;
     private int httpSendNums = 0;
     private int httpReceiveNums = 0;
+    LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     public MasterActor(int socketWorkNums, int httpWorkNums) {
         socketActorRef = getContext().actorOf(Props.create(SocketScanActor.class).withRouter(new RoundRobinPool(socketWorkNums)), "socketScanRouter");
@@ -38,17 +41,17 @@ public class MasterActor extends UntypedActor {
             }
             if(socketReceiveNums == socketSendNums && httpSendNums == 0){
                 getContext().stop(getSelf());
-                System.out.println("Scan over socket.cost:" + (System.currentTimeMillis() - start));
+                log.debug("Scan over socket.cost:" + (System.currentTimeMillis() - start));
             }
         } else if (msg instanceof HttpScanResult) {
             //处理http返回验证结果
             HttpScanResult result = (HttpScanResult) msg;
             httpReceiveNums ++;
             if(null!=result && result.isValue()) {
-                System.out.println("ip;" + result.getiPv4().getIp() + ",port:" + result.getiPv4().getPort() + "cost time:" + (System.currentTimeMillis() - start));
+                log.info("ip;" + result.getiPv4().getIp() + ",port:" + result.getiPv4().getPort() + "cost time:" + (System.currentTimeMillis() - start));
             }
             if(socketReceiveNums == socketSendNums && httpReceiveNums == httpSendNums ){
-                System.out.println("Scan over http.cost:" + (System.currentTimeMillis() - start)+ ",httpSendNums"+httpSendNums);
+                log.info("Scan over http.cost:" + (System.currentTimeMillis() - start)+ ",httpSendNums"+httpSendNums);
                 getContext().stop(getSelf());
                 getContext().system().shutdown();
             }
